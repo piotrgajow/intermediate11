@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ class CategoryTest {
     void populateCategories() throws URISyntaxException, IOException {
         URI uri = this.getClass().getClassLoader().getResource("kategorie.txt")
                 .toURI();
-        List<String> lines = Files.readAllLines(Paths.get(uri));
+        List<String> lines = Files.readAllLines(Paths.get(uri), Charset.forName("UNICODE"));
         List<Category> categories = Lists.newArrayList();
         int counter = 1;
         for (String line : lines) {
@@ -29,6 +30,16 @@ class CategoryTest {
         }
 
         Map<Integer, List<Category>> categoryMap = Maps.newHashMap();
+        for (Category category : categories) {
+//            if (category.getTitle().startsWith(" "))
+            int depth = category.getTitle().split("\\S")[0].length();
+            if (categoryMap.containsKey(depth)){
+                categoryMap.get(depth).add(category);
+            }else {
+                categoryMap.put(depth,Lists.newArrayList(category));
+            }
+        }
+        System.out.println();
 
     }
 }
