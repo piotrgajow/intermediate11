@@ -10,11 +10,9 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class CategoryTest {
 
@@ -31,15 +29,36 @@ class CategoryTest {
 
         Map<Integer, List<Category>> categoryMap = Maps.newHashMap();
         for (Category category : categories) {
-//            if (category.getTitle().startsWith(" "))
-            int depth = category.getTitle().split("\\S")[0].length();
-            if (categoryMap.containsKey(depth)){
+            int depth = category.getTitle().startsWith(" ") ? getDepth(category) : 0;
+            if (categoryMap.containsKey(depth)) {
                 categoryMap.get(depth).add(category);
-            }else { 
-                categoryMap.put(depth,Lists.newArrayList(category));
+            } else {
+                categoryMap.put(depth, Lists.newArrayList(category));
             }
         }
-        System.out.println();
-
+        populateInner(0, categoryMap);
     }
+
+    private void populateInner(int currentDepth, Map<Integer, List<Category>> categoryMap) {
+        List<Category> categories = categoryMap.get(currentDepth);
+        for (Category category : categories) {
+            category.setParentId(currentDepth == 0 ? null : matchParentID(currentDepth, categoryMap, category));
+        }
+        populateInner(currentDepth, categoryMap);
+    }
+
+    private Integer matchParentID(int currentDepth, Map<Integer, List<Category>> categoryMap, Category category) {
+        List<Category> potentialParentCategories = categoryMap.get(currentDepth - 1);
+        Integer idOfChildWaitingForPapa = category.getId();
+        potentialParentCategories.stream()
+                .filter(n -> n.getId() < idOfChildWaitingForPapa)
+                .map(n -> n.getId())
+                .sorted(Comparator.reverseOrder())
+                .findFirst();
+    }
+
+    private int getDepth(Category category) {
+        return category.getTitle().split("\\S")[0].length();
+    }
+
 }
