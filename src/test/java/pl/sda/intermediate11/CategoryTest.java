@@ -35,7 +35,7 @@ class CategoryTest {
             int depth = category.getTitle().split("\\S")[0].length();
             if (categoryMap.containsKey(depth)){
                 categoryMap.get(depth).add(category);
-            }else {
+            }else { 
                 categoryMap.put(depth,Lists.newArrayList(category));
             }
         }
