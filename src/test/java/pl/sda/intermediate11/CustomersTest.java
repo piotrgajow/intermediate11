@@ -42,6 +42,7 @@ public class CustomersTest {
         Map<BigDecimal, Long> resultMap = Arrays.stream(people)
                 .collect(Collectors.groupingBy(c -> c.getSalary(), Collectors.counting()));
         Assertions.assertEquals(2, resultMap.get(BigDecimal.valueOf(1200)).intValue());
+        Assertions.assertEquals(2, resultMap.get(BigDecimal.valueOf(3333)).intValue());
 
     }
 }
