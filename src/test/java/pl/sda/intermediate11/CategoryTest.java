@@ -2,6 +2,7 @@ package pl.sda.intermediate11;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 class CategoryTest {
 
@@ -37,24 +39,36 @@ class CategoryTest {
             }
         }
         populateInner(0, categoryMap);
+        Assertions.assertEquals(4, categoryMap.values().stream()
+                .flatMap(e -> e.stream())
+                .filter(n -> new Integer(6).equals(n.getId()))
+                .findFirst()
+                .map(p -> p.getParentId())
+                .orElse(-1)
+                .intValue()
+        );
     }
 
     private void populateInner(int currentDepth, Map<Integer, List<Category>> categoryMap) {
         List<Category> categories = categoryMap.get(currentDepth);
+        if (categories == null) {
+            return;
+        }
         for (Category category : categories) {
             category.setParentId(currentDepth == 0 ? null : matchParentID(currentDepth, categoryMap, category));
         }
-        populateInner(currentDepth, categoryMap);
+        populateInner(currentDepth+1, categoryMap);
     }
 
     private Integer matchParentID(int currentDepth, Map<Integer, List<Category>> categoryMap, Category category) {
         List<Category> potentialParentCategories = categoryMap.get(currentDepth - 1);
         Integer idOfChildWaitingForPapa = category.getId();
-        potentialParentCategories.stream()
+        return potentialParentCategories.stream()
                 .filter(n -> n.getId() < idOfChildWaitingForPapa)
                 .map(n -> n.getId())
                 .sorted(Comparator.reverseOrder())
-                .findFirst();
+                .findFirst()
+                .orElse(null);
     }
 
     private int getDepth(Category category) {
