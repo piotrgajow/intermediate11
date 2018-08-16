@@ -10,8 +10,11 @@ public class Category {
     private String title;
     private Integer parentId;
 
+
     public Category(int id, String title) {
         this.id = id;
         this.title = title;
     }
+
+
 }
