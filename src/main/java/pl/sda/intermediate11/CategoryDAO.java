@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CategoryDAO {
@@ -32,6 +33,14 @@ public class CategoryDAO {
         return instance;
 
     }
+
+    public Optional<Category> findCategoryById(Integer parentId) {
+        return getCategories()
+                .stream()
+                .filter(c -> c.getId().equals(parentId)).findFirst();
+
+    }
+
     private void populateParentId(int currentDepth, Map<Integer, List<Category>> categoryMap) {
         List<Category> categories = categoryMap.get(currentDepth);
         if (categories == null) {
@@ -40,8 +49,9 @@ public class CategoryDAO {
         for (Category category : categories) {
             category.setParentId(currentDepth == 0 ? null : matchParentID(currentDepth, categoryMap, category));
         }
-        populateParentId(currentDepth+1, categoryMap);
+        populateParentId(currentDepth + 1, categoryMap);
     }
+
     private Integer matchParentID(int currentDepth, Map<Integer, List<Category>> categoryMap, Category category) {
         List<Category> potentialParentCategories = categoryMap.get(currentDepth - 1);
         Integer idOfChildWaitingForPapa = category.getId();
@@ -52,10 +62,32 @@ public class CategoryDAO {
                 .findFirst()
                 .orElse(null);
     }
+
     private int getDepth(Category category) {
         return category.getTitle().split("\\S")[0].length();
     }
-    public List<Category> getCategories(){
+
+    public List<Category> getCategories() {
+        List<String> lines = readLinesFromFile();
+        List<Category> categories = prepareCategoriesList(lines);
+
+        Map<Integer, List<Category>> categoryMap = populateCategoriesMap(categories);
+        populateParentId(0, categoryMap);
+        return categoryMap.values().stream()
+                .flatMap(n -> n.stream())
+                .collect(Collectors.toList());
+    }
+
+    private List<Category> prepareCategoriesList(List<String> lines) {
+        List<Category> categories = Lists.newArrayList();
+        int counter = 1;
+        for (String line : lines) {
+            categories.add(new Category(counter++, line));
+        }
+        return categories;
+    }
+
+    private List<String> readLinesFromFile() {
         URI uri = null;
         try {
             uri = this.getClass().getClassLoader().getResource("kategorie.txt")
@@ -69,12 +101,10 @@ public class CategoryDAO {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        List<Category> categories = Lists.newArrayList();
-        int counter = 1;
-        for (String line : lines) {
-            categories.add(new Category(counter++, line));
-        }
+        return lines;
+    }
 
+    private Map<Integer, List<Category>> populateCategoriesMap(List<Category> categories) {
         Map<Integer, List<Category>> categoryMap = Maps.newHashMap();
         for (Category category : categories) {
             int depth = category.getTitle().startsWith(" ") ? getDepth(category) : 0;
@@ -84,9 +114,8 @@ public class CategoryDAO {
                 categoryMap.put(depth, Lists.newArrayList(category));
             }
         }
-        populateParentId(0, categoryMap);
-        return categoryMap.values().stream()
-                .flatMap(n->n.stream())
-                .collect(Collectors.toList());
+        return categoryMap;
     }
+
+
 }
