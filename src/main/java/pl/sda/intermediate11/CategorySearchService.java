@@ -1,12 +1,14 @@
 package pl.sda.intermediate11;
 
 import com.google.common.collect.Sets;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+@Service
 public class CategorySearchService {
     private CategoryDAO categoryDAO = CategoryDAO.getInstance();
 
