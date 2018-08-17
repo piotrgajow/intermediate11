@@ -1,12 +1,14 @@
 package pl.sda.intermediate11;
 
 import com.google.common.collect.Sets;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+@Service
 public class CategorySearchService {
     private CategoryDAO categoryDAO = CategoryDAO.getInstance();
 
@@ -15,12 +17,12 @@ public class CategorySearchService {
                 //.filter(cat -> cat.getTitle().equalsIgnoreCase(searchText.trim()))
                 .map(c -> buildCategoryDTO(c))
                 .peek(c -> c.setParentCat(findParent(c)))
-                .peek(c -> setStateAndOpenParents(c,searchText))
+                .peek(c -> setStateAndOpenParents(c, searchText))
                 .collect(Collectors.toList());
     }
 
     private void setStateAndOpenParents(CategoryDTO categoryDTO, String searchText) {
-        if (categoryDTO.getText().equalsIgnoreCase(searchText.trim())) {
+        if (searchText != null && categoryDTO.getText().equalsIgnoreCase(searchText.trim())) {
             categoryDTO.getCategoryState().setSelected(true);
             categoryDTO.getCategoryState().setOpen(true);
             openParents(categoryDTO);
@@ -38,6 +40,9 @@ public class CategorySearchService {
     }
 
     private CategoryDTO findParent(CategoryDTO child) {
+        if (child.getParentCategoryId() == null) {
+            return null;
+        }
         return categoryDAO.findCategoryById(Integer.valueOf(child.getParentCategoryId()))
                 .map(c -> buildCategoryDTO(c))
                 .orElse(null);
