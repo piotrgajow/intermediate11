@@ -12,9 +12,29 @@ public class CategorySearchService {
 
     public List<CategoryDTO> filterCategories(String searchText) {
         return categoryDAO.getCategories().stream()
-                .filter(cat -> cat.getTitle().equalsIgnoreCase(searchText.trim()))
+                //.filter(cat -> cat.getTitle().equalsIgnoreCase(searchText.trim()))
                 .map(c -> buildCategoryDTO(c))
-                .peek(c -> c.setParentCat(findParent(c))).collect(Collectors.toList());
+                .peek(c -> c.setParentCat(findParent(c)))
+                .peek(c -> setStateAndOpenParents(c,searchText))
+                .collect(Collectors.toList());
+    }
+
+    private void setStateAndOpenParents(CategoryDTO categoryDTO, String searchText) {
+        if (categoryDTO.getText().equalsIgnoreCase(searchText.trim())) {
+            categoryDTO.getCategoryState().setSelected(true);
+            categoryDTO.getCategoryState().setOpen(true);
+            openParents(categoryDTO);
+        }
+    }
+
+    private void openParents(CategoryDTO categoryDTO) {
+        CategoryDTO parentCat = categoryDTO.getParentCat();
+        if (parentCat == null) {
+            return;
+        }
+        parentCat.getCategoryState().setOpen(true);
+        openParents(parentCat);
+
     }
 
     private CategoryDTO findParent(CategoryDTO child) {
