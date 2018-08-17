@@ -1,7 +1,10 @@
 package pl.sda.intermediate11;
 
+import com.google.common.collect.Sets;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class CategorySearchService {
