@@ -29,4 +29,8 @@ public class OnlyOneController {
         return "catspage"; //takiego htmla bedzie szukac nasza aplikacja
     }
 
+    public String registerEffect(UserRegistrationDTO userRegistrationDTO){
+        return null;
+    }
+
 }
