@@ -15,5 +15,9 @@ public class CategoryDTO {
     private String parentCategoryId;
     private CategoryDTO parentCat;
 
+    public String getParent() {
+        return parentCategoryId == null ? "#" : parentCategoryId;
+    }
+
 
 }
