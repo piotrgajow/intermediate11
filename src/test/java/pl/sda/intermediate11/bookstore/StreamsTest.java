@@ -1,4 +1,4 @@
-package pl.sda.intermediate11;
+package pl.sda.intermediate11.bookstore;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.StringUtils;

@@ -1,20 +1,19 @@
-package pl.sda.intermediate11;
+package pl.sda.intermediate11.bookstore;
 
-public class User {
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class UserRegistrationDTO {
 
     private String firstName;
     private String lastName;
-    private String zipCode;
-    private String city;
-    private String country;
-    private String street;
+    private UserAddress userAddress;
     private String birthDate;
     private String pesel;
     private String email;
     private String password;
     private String phone;
     private boolean preferEmails;
-
-
-
 }

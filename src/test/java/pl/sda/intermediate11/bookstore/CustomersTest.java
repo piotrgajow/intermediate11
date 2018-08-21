@@ -1,8 +1,9 @@
-package pl.sda.intermediate11;
+package pl.sda.intermediate11.bookstore;
 
 import com.google.common.collect.Maps;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import pl.sda.intermediate11.bookstore.Customer;
 
 import java.math.BigDecimal;
 import java.util.Arrays;

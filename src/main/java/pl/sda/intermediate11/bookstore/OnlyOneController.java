@@ -1,4 +1,4 @@
-package pl.sda.intermediate11;
+package pl.sda.intermediate11.bookstore;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

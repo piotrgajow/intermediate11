@@ -1,7 +1,10 @@
-package pl.sda.intermediate11;
+package pl.sda.intermediate11.bookstore;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import pl.sda.intermediate11.bookstore.UserAddress;
+import pl.sda.intermediate11.bookstore.UserRegistrationDTO;
+import pl.sda.intermediate11.bookstore.UserValidationService;
 
 import java.util.Map;
 

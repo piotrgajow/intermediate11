@@ -1,9 +1,8 @@
-package pl.sda.intermediate11;
+package pl.sda.intermediate11.bookstore;
 
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class UserValidationService {

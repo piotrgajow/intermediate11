@@ -1,11 +1,9 @@
-package pl.sda.intermediate11;
+package pl.sda.intermediate11.bookstore;
 
-import com.google.common.collect.Sets;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @Service

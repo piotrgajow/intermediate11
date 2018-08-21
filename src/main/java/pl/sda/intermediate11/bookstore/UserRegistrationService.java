@@ -1,4 +1,4 @@
-package pl.sda.intermediate11;
+package pl.sda.intermediate11.bookstore;
 
 public class UserRegistrationService {
 
