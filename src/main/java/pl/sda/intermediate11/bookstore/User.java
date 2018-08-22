@@ -1,5 +1,10 @@
 package pl.sda.intermediate11.bookstore;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class User {
 
     private String firstName;

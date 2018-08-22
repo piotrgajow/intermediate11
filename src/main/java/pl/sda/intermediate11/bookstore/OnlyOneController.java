@@ -32,7 +32,7 @@ public class OnlyOneController {
         return "catspage"; //takiego htmla bedzie szukac nasza aplikacja
     }
 
-    @PostMapping(value = "/register")
+    @PostMapping(value = "/register") //POST - wysłanie danych
     public String registerEffect(@ModelAttribute UserRegistrationDTO userRegistrationDTO, Map<String, Object> model) {
         Map<String, String> errorsMap = userValidationService.validateUserData(userRegistrationDTO);
         model.put("countries", CountryEnum.values());
