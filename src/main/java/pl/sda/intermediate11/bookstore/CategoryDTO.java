@@ -11,7 +11,7 @@ public class CategoryDTO {
 
     private String id;
     private String text;
-    private CategoryState categoryState;
+    private CategoryState state;
     private String parentCategoryId;
     private CategoryDTO parentCat;
 
