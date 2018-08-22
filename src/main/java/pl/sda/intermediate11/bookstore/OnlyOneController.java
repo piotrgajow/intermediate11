@@ -2,20 +2,23 @@ package pl.sda.intermediate11.bookstore;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@Controller//singleton
 public class OnlyOneController {
 
+    //dependency injection-wstrzykiwanie zależności
+
+    @Autowired//spring wstawi tutaj referencję
+    private UserValidationService userValidationService;
     @Autowired
     private CategorySearchService categorySearchService;
+    @Autowired
+    private UserRegistrationService userRegistrationService;
 
-    //dependency injection-wstrzykiwanie zależności
 
     @RequestMapping("/")
     public String welcome() {
@@ -29,8 +32,24 @@ public class OnlyOneController {
         return "catspage"; //takiego htmla bedzie szukac nasza aplikacja
     }
 
-    public String registerEffect(UserRegistrationDTO userRegistrationDTO){
-        return null;
+    @PostMapping(value = "/register")
+    public String registerEffect(@ModelAttribute UserRegistrationDTO userRegistrationDTO, Map<String, Object> model) {
+        Map<String, String> errorsMap = userValidationService.validateUserData(userRegistrationDTO);
+        model.put("countries", CountryEnum.values());
+        model.put("form", userRegistrationDTO);
+        if (errorsMap.isEmpty()) {
+            userRegistrationService.registerUser(userRegistrationDTO);
+            return "registerEffect";
+        } else {
+            model.putAll(errorsMap);
+            return "registerForm";
+        }
+    }
+    @GetMapping(value = "/register")
+    public String registerForm(Map<String, Object> model){
+        model.put("form", new UserRegistrationDTO());
+        model.put("countries", CountryEnum.values());
+        return "registerForm";
     }
 
 }

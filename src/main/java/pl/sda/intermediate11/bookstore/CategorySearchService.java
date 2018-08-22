@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
+@Service//singleton
 public class CategorySearchService {
     private CategoryDAO categoryDAO = CategoryDAO.getInstance();
 
