@@ -18,6 +18,8 @@ public class OnlyOneController {
     private CategorySearchService categorySearchService;
     @Autowired
     private UserRegistrationService userRegistrationService;
+    @Autowired
+    private UserLoginService userLoginService;
 
 
     @RequestMapping("/")
@@ -45,11 +47,23 @@ public class OnlyOneController {
             return "registerForm";
         }
     }
+
     @GetMapping(value = "/register")
-    public String registerForm(Map<String, Object> model){
+    public String registerForm(Map<String, Object> model) {
         model.put("form", new UserRegistrationDTO());
         model.put("countries", CountryEnum.values());
         return "registerForm";
     }
 
+    @GetMapping(value = "/login")
+    public String login(Map<String, Object> model) {
+        model.put("form", new UserLoginDTO());
+        return "login";
+    }
+
+    @PostMapping(value = "/login")
+    public String loginEffect(@ModelAttribute UserLoginDTO userLoginDTO, Map<String, Object> model) {
+        userLoginService.login(userLoginDTO);
+        return "index";
+    }
 }
