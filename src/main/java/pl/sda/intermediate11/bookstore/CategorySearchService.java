@@ -1,14 +1,12 @@
-package pl.sda.intermediate11;
+package pl.sda.intermediate11.bookstore;
 
-import com.google.common.collect.Sets;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-@Service
+@Service//singleton
 public class CategorySearchService {
     private CategoryDAO categoryDAO = CategoryDAO.getInstance();
 
@@ -23,8 +21,9 @@ public class CategorySearchService {
 
     private void setStateAndOpenParents(CategoryDTO categoryDTO, String searchText) {
         if (searchText != null && categoryDTO.getText().equalsIgnoreCase(searchText.trim())) {
-            categoryDTO.getCategoryState().setSelected(true);
-            categoryDTO.getCategoryState().setOpen(true);
+//            categoryDTO.setState(new CategoryState());
+            categoryDTO.getState().setSelected(true);
+            categoryDTO.getState().setOpen(true);
             openParents(categoryDTO);
         }
     }
@@ -34,7 +33,8 @@ public class CategorySearchService {
         if (parentCat == null) {
             return;
         }
-        parentCat.getCategoryState().setOpen(true);
+
+        parentCat.getState().setOpen(true);
         openParents(parentCat);
 
     }
@@ -51,8 +51,9 @@ public class CategorySearchService {
 
     private CategoryDTO buildCategoryDTO(Category c) {
         return CategoryDTO.builder()
-                .text(c.getTitle())
+                .text(c.getTitle().trim())
                 .id(c.getId().toString())
+                .state(new CategoryState())
 //                        .parentCategoryId(c.getParentId() == null ? null : c.getParentId()
 //                                .toString())
                 .parentCategoryId(Optional.ofNullable(c.getParentId()).map(e -> e.toString())

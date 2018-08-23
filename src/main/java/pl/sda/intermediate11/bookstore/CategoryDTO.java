@@ -1,4 +1,4 @@
-package pl.sda.intermediate11;
+package pl.sda.intermediate11.bookstore;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -11,9 +11,13 @@ public class CategoryDTO {
 
     private String id;
     private String text;
-    private CategoryState categoryState;
+    private CategoryState state;
     private String parentCategoryId;
     private CategoryDTO parentCat;
+
+    public String getParent() {
+        return parentCategoryId == null ? "#" : parentCategoryId;
+    }
 
 
 }
