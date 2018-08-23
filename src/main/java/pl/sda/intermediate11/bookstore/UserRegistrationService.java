@@ -14,8 +14,8 @@ public class UserRegistrationService {
         if (userExists(userRegistrationDTO)) {
             throw new UserExistsException("Użytkownik istnieje");
         }
-        User user = rewriteDtoToUser(userRegistrationDTO)
-        ;
+        User user = rewriteDtoToUser(userRegistrationDTO);
+        userDAO.addUser(user);
     }
 
     private User rewriteDtoToUser(UserRegistrationDTO userRegistrationDTO) {
