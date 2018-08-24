@@ -20,5 +20,9 @@ public class UserContextHolder {
         }
     }
 
+    public static void userLogOut(){
+        userLoggedInDto = null;
+    }
+
 
 }

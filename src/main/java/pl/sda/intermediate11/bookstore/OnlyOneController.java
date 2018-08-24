@@ -8,6 +8,7 @@ import pl.sda.intermediate11.bookstore.categories.CategorySearchService;
 import pl.sda.intermediate11.bookstore.users.entities.CountryEnum;
 import pl.sda.intermediate11.bookstore.users.dtos.UserLoginDTO;
 import pl.sda.intermediate11.bookstore.users.dtos.UserRegistrationDTO;
+import pl.sda.intermediate11.bookstore.users.services.UserContextHolder;
 import pl.sda.intermediate11.bookstore.users.services.UserLoginService;
 import pl.sda.intermediate11.bookstore.users.services.UserRegistrationService;
 import pl.sda.intermediate11.bookstore.users.services.UserValidationService;
@@ -72,6 +73,12 @@ public class OnlyOneController {
     @PostMapping(value = "/login")
     public String loginEffect(@ModelAttribute UserLoginDTO userLoginDTO, Map<String, Object> model) {
         userLoginService.login(userLoginDTO);
+        return "index";
+    }
+
+    @GetMapping(value = "/logout")
+    public String logOut(){
+        UserContextHolder.userLogOut();
         return "index";
     }
 }
