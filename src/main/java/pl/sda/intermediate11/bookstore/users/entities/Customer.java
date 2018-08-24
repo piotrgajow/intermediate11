@@ -1,4 +1,4 @@
-package pl.sda.intermediate11;
+package pl.sda.intermediate11.bookstore.users.entities;
 
 import lombok.Getter;
 import lombok.Setter;

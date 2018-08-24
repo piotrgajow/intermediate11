@@ -1,4 +1,4 @@
-package pl.sda.intermediate11;
+package pl.sda.intermediate11.bookstore.categories;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +9,7 @@ public class Category {
     private Integer id;
     private String title;
     private Integer parentId;
+
 
     public Category(int id, String title) {
         this.id = id;
