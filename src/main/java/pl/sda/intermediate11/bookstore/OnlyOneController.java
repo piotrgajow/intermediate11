@@ -1,6 +1,7 @@
 package pl.sda.intermediate11.bookstore;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.intermediate11.bookstore.categories.CategoryDTO;
@@ -12,6 +13,7 @@ import pl.sda.intermediate11.bookstore.users.services.UserContextHolder;
 import pl.sda.intermediate11.bookstore.users.services.UserLoginService;
 import pl.sda.intermediate11.bookstore.users.services.UserRegistrationService;
 import pl.sda.intermediate11.bookstore.users.services.UserValidationService;
+import pl.sda.intermediate11.bookstore.weather.WeatherService;
 
 import java.util.List;
 import java.util.Map;
@@ -29,6 +31,8 @@ public class OnlyOneController {
     private UserRegistrationService userRegistrationService;
     @Autowired
     private UserLoginService userLoginService;
+    @Autowired
+    private WeatherService weatherService;
 
 
     @RequestMapping("/")
@@ -77,8 +81,15 @@ public class OnlyOneController {
     }
 
     @GetMapping(value = "/logout")
-    public String logOut(){
+    public String logOut() {
         UserContextHolder.userLogOut();
         return "index";
     }
+
+    @GetMapping("/weather")
+    @ResponseBody
+    public ResponseEntity<String> weather() {
+        return ResponseEntity.ok(weatherService.getWeatherInfo());
+    }
+
 }
