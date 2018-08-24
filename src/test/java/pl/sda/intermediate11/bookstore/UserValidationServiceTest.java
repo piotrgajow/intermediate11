@@ -2,9 +2,9 @@ package pl.sda.intermediate11.bookstore;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import pl.sda.intermediate11.bookstore.UserAddress;
-import pl.sda.intermediate11.bookstore.UserRegistrationDTO;
-import pl.sda.intermediate11.bookstore.UserValidationService;
+import pl.sda.intermediate11.bookstore.users.entities.UserAddress;
+import pl.sda.intermediate11.bookstore.users.dtos.UserRegistrationDTO;
+import pl.sda.intermediate11.bookstore.users.services.UserValidationService;
 
 import java.util.Map;
 

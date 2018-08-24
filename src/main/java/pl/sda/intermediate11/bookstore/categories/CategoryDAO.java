@@ -1,4 +1,4 @@
-package pl.sda.intermediate11.bookstore;
+package pl.sda.intermediate11.bookstore.categories;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

@@ -1,12 +1,12 @@
-package pl.sda.intermediate11.bookstore;
+package pl.sda.intermediate11.bookstore.users.daos;
 
 import org.springframework.stereotype.Service;
+import pl.sda.intermediate11.bookstore.users.entities.User;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Service
 public class UserDAO {

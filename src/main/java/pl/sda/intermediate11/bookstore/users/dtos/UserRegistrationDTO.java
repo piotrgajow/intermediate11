@@ -1,7 +1,8 @@
-package pl.sda.intermediate11.bookstore;
+package pl.sda.intermediate11.bookstore.users.dtos;
 
 import lombok.Getter;
 import lombok.Setter;
+import pl.sda.intermediate11.bookstore.users.entities.UserAddress;
 
 @Getter
 @Setter
