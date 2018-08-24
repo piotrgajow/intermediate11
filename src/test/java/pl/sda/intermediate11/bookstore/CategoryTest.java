@@ -2,7 +2,7 @@ package pl.sda.intermediate11.bookstore;
 
 import com.google.common.collect.Sets;
 import org.junit.jupiter.api.Test;
-import pl.sda.intermediate11.bookstore.Category;
+import pl.sda.intermediate11.bookstore.categories.Category;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

@@ -1,8 +1,12 @@
-package pl.sda.intermediate11.bookstore;
+package pl.sda.intermediate11.bookstore.users.services;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.sda.intermediate11.bookstore.users.daos.UserDAO;
+import pl.sda.intermediate11.bookstore.users.dtos.UserRegistrationDTO;
+import pl.sda.intermediate11.bookstore.users.entities.User;
+import pl.sda.intermediate11.bookstore.users.exceptions.UserExistsException;
 
 @Service
 public class UserRegistrationService {

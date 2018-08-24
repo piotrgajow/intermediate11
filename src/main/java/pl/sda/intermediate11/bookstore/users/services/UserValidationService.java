@@ -1,8 +1,9 @@
-package pl.sda.intermediate11.bookstore;
+package pl.sda.intermediate11.bookstore.users.services;
 
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import pl.sda.intermediate11.bookstore.users.dtos.UserRegistrationDTO;
 
 import java.util.Map;
 

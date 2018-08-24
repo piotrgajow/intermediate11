@@ -3,6 +3,15 @@ package pl.sda.intermediate11.bookstore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import pl.sda.intermediate11.bookstore.categories.CategoryDTO;
+import pl.sda.intermediate11.bookstore.categories.CategorySearchService;
+import pl.sda.intermediate11.bookstore.users.entities.CountryEnum;
+import pl.sda.intermediate11.bookstore.users.dtos.UserLoginDTO;
+import pl.sda.intermediate11.bookstore.users.dtos.UserRegistrationDTO;
+import pl.sda.intermediate11.bookstore.users.services.UserContextHolder;
+import pl.sda.intermediate11.bookstore.users.services.UserLoginService;
+import pl.sda.intermediate11.bookstore.users.services.UserRegistrationService;
+import pl.sda.intermediate11.bookstore.users.services.UserValidationService;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +27,8 @@ public class OnlyOneController {
     private CategorySearchService categorySearchService;
     @Autowired
     private UserRegistrationService userRegistrationService;
+    @Autowired
+    private UserLoginService userLoginService;
 
 
     @RequestMapping("/")
@@ -45,11 +56,29 @@ public class OnlyOneController {
             return "registerForm";
         }
     }
+
     @GetMapping(value = "/register")
-    public String registerForm(Map<String, Object> model){
+    public String registerForm(Map<String, Object> model) {
         model.put("form", new UserRegistrationDTO());
         model.put("countries", CountryEnum.values());
         return "registerForm";
     }
 
+    @GetMapping(value = "/login")
+    public String login(Map<String, Object> model) {
+        model.put("form", new UserLoginDTO());
+        return "login";
+    }
+
+    @PostMapping(value = "/login")
+    public String loginEffect(@ModelAttribute UserLoginDTO userLoginDTO, Map<String, Object> model) {
+        userLoginService.login(userLoginDTO);
+        return "index";
+    }
+
+    @GetMapping(value = "/logout")
+    public String logOut(){
+        UserContextHolder.userLogOut();
+        return "index";
+    }
 }
