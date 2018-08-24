@@ -16,13 +16,20 @@ public class UserLoginService {
     @Autowired
     private UserDAO userDAO;
 
+
+
     public void login(UserLoginDTO userLoginDTO){
         Optional<User> userByEmail = userDAO.findUserByEmail(userLoginDTO.getLogin());
         if (!userByEmail.isPresent()) {
             throw new UserNotExistsException("Nie ma takiego użytkownika " + userLoginDTO.getLogin());
         }
-        if (!DigestUtils.sha512Hex(userLoginDTO.getPassword()).equals(userByEmail.get().getPassword())){
+        if (passwordDoesNotMatch(userLoginDTO, userByEmail)){
             throw new PasswordDoesNotMatchException("Hasło nie pasuje");
         }
+        UserContextHolder.logInUser(userByEmail.get().getEmail());
+    }
+
+    private boolean passwordDoesNotMatch(UserLoginDTO userLoginDTO, Optional<User> userByEmail) {
+        return !DigestUtils.sha512Hex(userLoginDTO.getPassword()).equals(userByEmail.get().getPassword());
     }
 }

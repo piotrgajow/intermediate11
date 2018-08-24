@@ -6,4 +6,8 @@ import lombok.Data;
 public class UserLoggedInDto {
 
     private String login;
+
+    public UserLoggedInDto(String email) {
+        this.login = email;
+    }
 }
