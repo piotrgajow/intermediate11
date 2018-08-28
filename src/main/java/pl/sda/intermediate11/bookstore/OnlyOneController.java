@@ -6,9 +6,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.intermediate11.bookstore.categories.CategoryDTO;
 import pl.sda.intermediate11.bookstore.categories.CategorySearchService;
+import pl.sda.intermediate11.bookstore.products.ProductDao;
 import pl.sda.intermediate11.bookstore.users.entities.CountryEnum;
 import pl.sda.intermediate11.bookstore.users.dtos.UserLoginDTO;
 import pl.sda.intermediate11.bookstore.users.dtos.UserRegistrationDTO;
+import pl.sda.intermediate11.bookstore.users.exceptions.PasswordDoesNotMatchException;
+import pl.sda.intermediate11.bookstore.users.exceptions.UserNotExistsException;
 import pl.sda.intermediate11.bookstore.users.services.UserContextHolder;
 import pl.sda.intermediate11.bookstore.users.services.UserLoginService;
 import pl.sda.intermediate11.bookstore.users.services.UserRegistrationService;
@@ -33,6 +36,8 @@ public class OnlyOneController {
     private UserLoginService userLoginService;
     @Autowired
     private WeatherService weatherService;
+    @Autowired
+    private ProductDao productDao;
 
 
     @RequestMapping("/")
@@ -76,7 +81,13 @@ public class OnlyOneController {
 
     @PostMapping(value = "/login")
     public String loginEffect(@ModelAttribute UserLoginDTO userLoginDTO, Map<String, Object> model) {
-        userLoginService.login(userLoginDTO);
+        try {
+            userLoginService.login(userLoginDTO);
+        } catch (PasswordDoesNotMatchException | UserNotExistsException e) {
+            model.put("error", e.getMessage());
+            model.put("form", new UserLoginDTO());
+            return "login";
+        }
         return "index";
     }
 
@@ -90,6 +101,13 @@ public class OnlyOneController {
     @ResponseBody
     public ResponseEntity<String> weather() {
         return ResponseEntity.ok(weatherService.getWeatherInfo());
+    }
+
+    @GetMapping(value = "/products")
+    public String getProducts(Map<String, Object> model, @RequestParam(required = false) String searchText) {
+
+        model.put("products", productDao.getProductList(searchText));
+        return "products";
     }
 
 }
