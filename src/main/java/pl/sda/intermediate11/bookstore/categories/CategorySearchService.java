@@ -10,6 +10,11 @@ import java.util.stream.Collectors;
 public class CategorySearchService {
     private CategoryDAO categoryDAO = CategoryDAO.getInstance();
 
+    public void moveCategory(String newParentId, String movedId) {
+        categoryDAO.findCategoryById(Integer.valueOf(movedId))
+                .ifPresent(n -> n.setParentId(Integer.valueOf(newParentId)));
+    }
+
     public List<CategoryDTO> filterCategories(String searchText) {
         return categoryDAO.getCategories().stream()
                 //.filter(cat -> cat.getTitle().equalsIgnoreCase(searchText.trim()))
