@@ -106,7 +106,7 @@ public class OnlyOneController {
     @GetMapping(value = "/products")
     public String getProducts(Map<String, Object> model, @RequestParam(required = false) String searchText) {
 
-        model.put("products", productDao.getProductList(searchText));
+        model.put("products", productDao.getProductList(searchText, 50));
         return "products";
     }
 

@@ -6,6 +6,7 @@ import lombok.Data;
 public class Product {
     private String title;
     private Integer id;
+    private String description;
 
     public Product(String title, Integer id) {
         this.title = title;

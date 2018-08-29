@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -20,18 +19,18 @@ public class ProductDao {
 
     List<Product> list = new ArrayList<>();
 
-    public List<Product> getProductList(String searchText) {
+    public List<Product> getProductList(String searchText, int maxSize) {
         if (list.isEmpty()) {
             list.addAll(populateProductList());
         }
         if (StringUtils.isBlank(searchText)) {
             return list.stream()
-                    .limit(50)
+                    .limit(maxSize)
                     .collect(Collectors.toList());
         }
         return list.stream()
                 .filter(n -> n.getTitle().contains(searchText))
-                .limit(50)
+                .limit(maxSize)
                 .collect(Collectors.toList());
     }
 
@@ -44,7 +43,9 @@ public class ProductDao {
             List<String> lines = Files.readAllLines(Paths.get(this
                     .getClass().getClassLoader().getResource("GUTINDEX.ALL").toURI()));
             boolean readingProductsActive = false;
-            for (String line : lines) {
+            boolean readAdditionalDescription = false;
+            Product product = null;
+            for (String line : lines.stream().map(l -> l.trim()).collect(Collectors.toList())) {
                 if (line.startsWith("TITLE and AUTHOR")) {
                     readingProductsActive = true;
                 }
@@ -52,10 +53,22 @@ public class ProductDao {
                     readingProductsActive = false;
                 }
                 Matcher matcher = pattern.matcher(line);
+                if (matcher.matches() && readAdditionalDescription) {
+                    readAdditionalDescription = false;
+                }
                 if (readingProductsActive && matcher.matches()) {
                     String title = matcher.group(1);
                     String id = matcher.group(3);
-                    products.add(new Product(title, Integer.parseInt(id)));
+                    product = new Product(title, Integer.parseInt(id));
+                    products.add(product);
+                    readAdditionalDescription = true;
+                }
+                if (readAdditionalDescription && readingProductsActive && !matcher.matches() && StringUtils.isNotBlank(line)) {
+                    if (StringUtils.isBlank(product.getDescription())) {
+                        product.setDescription(line);
+                    } else {
+                        product.setDescription(product.getDescription() + line);
+                    }
                 }
             }
         } catch (IOException | URISyntaxException e) {
