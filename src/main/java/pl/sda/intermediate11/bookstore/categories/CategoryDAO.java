@@ -2,6 +2,7 @@ package pl.sda.intermediate11.bookstore.categories;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,11 +16,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.collections4.CollectionUtils.*;
+
 public class CategoryDAO {
     private CategoryDAO() {
     }
 
     private static CategoryDAO instance;
+    private List<Category> categoriesCache;
 
 
     public static CategoryDAO getInstance() {
@@ -68,14 +72,18 @@ public class CategoryDAO {
     }
 
     public List<Category> getCategories() {
+        if (isNotEmpty(this.categoriesCache)) {
+            return this.categoriesCache;
+        }
         List<String> lines = readLinesFromFile();
         List<Category> categories = prepareCategoriesList(lines);
 
         Map<Integer, List<Category>> categoryMap = populateCategoriesMap(categories);
         populateParentId(0, categoryMap);
-        return categoryMap.values().stream()
+        this.categoriesCache = categoryMap.values().stream()
                 .flatMap(n -> n.stream())
                 .collect(Collectors.toList());
+        return this.categoriesCache;
     }
 
     private List<Category> prepareCategoriesList(List<String> lines) {
@@ -90,7 +98,7 @@ public class CategoryDAO {
     private List<String> readLinesFromFile() {
         URI uri = null;
         try {
-            uri = this.getClass().getClassLoader().getResource("kategorie.txt")
+            uri = this.getClass().getClassLoader().getResource("kategorie2.txt")
                     .toURI();
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -107,7 +115,8 @@ public class CategoryDAO {
     private Map<Integer, List<Category>> populateCategoriesMap(List<Category> categories) {
         Map<Integer, List<Category>> categoryMap = Maps.newHashMap();
         for (Category category : categories) {
-            int depth = category.getTitle().startsWith(" ") ? getDepth(category) : 0;
+            int depth = (category.getTitle().startsWith(" ") || category.getTitle().startsWith("\t"))
+                    ? getDepth(category) : 0;
             if (categoryMap.containsKey(depth)) {
                 categoryMap.get(depth).add(category);
             } else {
