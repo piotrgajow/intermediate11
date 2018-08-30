@@ -62,4 +62,12 @@ class StringCalculatorTest {
 
         assertEquals(99,result);
     }
+    @Test
+    void shouldReturnSumOfManyNumbersSeparatedWithCustomDelimiter() {
+        String exampleData = " //;\n1; 2";
+
+        int result = StringCalculator.adding(exampleData);
+
+        assertEquals(3,result);
+    }
 }
