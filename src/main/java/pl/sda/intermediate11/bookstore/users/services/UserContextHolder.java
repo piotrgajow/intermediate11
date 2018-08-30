@@ -12,7 +12,7 @@ public class UserContextHolder {
         userLoggedInDto = new UserLoggedInDto(email);
     }
 
-    public String getUserLoggedIn() {
+    public static String getUserLoggedIn() {
         if (userLoggedInDto == null) {
             return null;
         }else {

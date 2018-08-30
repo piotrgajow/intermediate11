@@ -1,17 +1,22 @@
 package pl.sda.intermediate11.bookstore;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.intermediate11.bookstore.categories.CategoryDTO;
 import pl.sda.intermediate11.bookstore.categories.CategorySearchService;
+import pl.sda.intermediate11.bookstore.products.ProductDao;
 import pl.sda.intermediate11.bookstore.users.entities.CountryEnum;
 import pl.sda.intermediate11.bookstore.users.dtos.UserLoginDTO;
 import pl.sda.intermediate11.bookstore.users.dtos.UserRegistrationDTO;
+import pl.sda.intermediate11.bookstore.users.exceptions.PasswordDoesNotMatchException;
+import pl.sda.intermediate11.bookstore.users.exceptions.UserNotExistsException;
 import pl.sda.intermediate11.bookstore.users.services.UserContextHolder;
 import pl.sda.intermediate11.bookstore.users.services.UserLoginService;
 import pl.sda.intermediate11.bookstore.users.services.UserRegistrationService;
 import pl.sda.intermediate11.bookstore.users.services.UserValidationService;
+import pl.sda.intermediate11.bookstore.weather.WeatherService;
 
 import java.util.List;
 import java.util.Map;
@@ -29,6 +34,10 @@ public class OnlyOneController {
     private UserRegistrationService userRegistrationService;
     @Autowired
     private UserLoginService userLoginService;
+    @Autowired
+    private WeatherService weatherService;
+    @Autowired
+    private ProductDao productDao;
 
 
     @RequestMapping("/")
@@ -41,6 +50,11 @@ public class OnlyOneController {
         List<CategoryDTO> categoryDTOS = categorySearchService.filterCategories(searchText);
         model.put("catsdata", categoryDTOS); //To zostanie wyslane na front
         return "catspage"; //takiego htmla bedzie szukac nasza aplikacja
+    }
+
+    @PostMapping(value = "/moveCat")
+    public void moveCat(@RequestParam String newParentId, @RequestParam String movedId) {
+        categorySearchService.moveCategory(newParentId,movedId);
     }
 
     @PostMapping(value = "/register") //POST - wysłanie danych
@@ -72,13 +86,33 @@ public class OnlyOneController {
 
     @PostMapping(value = "/login")
     public String loginEffect(@ModelAttribute UserLoginDTO userLoginDTO, Map<String, Object> model) {
-        userLoginService.login(userLoginDTO);
+        try {
+            userLoginService.login(userLoginDTO);
+        } catch (PasswordDoesNotMatchException | UserNotExistsException e) {
+            model.put("error", e.getMessage());
+            model.put("form", new UserLoginDTO());
+            return "login";
+        }
         return "index";
     }
 
     @GetMapping(value = "/logout")
-    public String logOut(){
+    public String logOut() {
         UserContextHolder.userLogOut();
         return "index";
     }
+
+    @GetMapping("/weather")
+    @ResponseBody
+    public ResponseEntity<String> weather() {
+        return ResponseEntity.ok(weatherService.getWeatherInfo());
+    }
+
+    @GetMapping(value = "/products")
+    public String getProducts(Map<String, Object> model, @RequestParam(required = false) String searchText) {
+
+        model.put("products", productDao.getProductList(searchText, 50));
+        return "products";
+    }
+
 }
